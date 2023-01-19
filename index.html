@@ -17,27 +17,30 @@
 <body class="container">
 
 
-    <div id="display"></div>
+    <div id="display" style="max-width: auto; height: 500px"></div>
 
     <script>
         google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
-            var chartdata = [];
-            chartdata[0] = ['Provinces', 'Totol'];
 
-            fetch('https://jirawatchk.github.io/api.json')
+
+            fetch('http://localhost:3000/dataset')
                 .then(res => res.json())
                 .then(data => {
-                    //console.log(data)
-                    for (i = 1; i < 78; i++) {
-                        chartdata[i] = [data[i]['CC-DESC'], parseFloat(data[i]["TOTAL"].replace(/,/g, ''))];
-                        //console.log(chartdata[i]);
+                    var chartdata = [];
+                    chartdata[0] = ['Area', 'Totol'];
+                    // console.log(data)
+                    for (i = 1; i < data.length; i++) {
+                        chartdata[i] = [data[i]['area'], data[i]["value"]];
+                        // console.log(chartdata[i]); 
                     }
                     var data = google.visualization.arrayToDataTable(chartdata);
+                    // console.log(chartdata[1]);
                     var options = {
-                        region: 'TH',
-                        resolution: 'provinces',
+                        title: 'Company Performance',
+                        curveType: 'function',
+                        legend: { position: 'bottom' }
                     };
                     var chart = new google.visualization.LineChart(document.getElementById('display'));
                     chart.draw(data, options);
